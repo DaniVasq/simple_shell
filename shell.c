@@ -18,12 +18,11 @@ void prompt(void);
 int listenread(char *);
 void get_simple_args(int, char **, char *);
 void pid_launch(char *);
-char** str_split(char* a_str, const char a_delim);
 void _error(void);
 
 /** fn entry to launch shell program*/
 /** this fn allow get data of the client terminal to after process, when it's pass the fn is call newly*/
-int main (int argc, char *argv[] __attribute((unused)))
+int main(int argc, char *argv[] __attribute((unused)))
 {
 	/** pointer used to save data input of the terminal client */
 	char *line;
@@ -33,11 +32,10 @@ int main (int argc, char *argv[] __attribute((unused)))
 	_isatty = isatty(0);
 	if (argc == 1)
 	{
-        	/** launch prompt */
+		/** launch prompt */
 		if (_isatty != 0)
 			prompt();
-
-        	line = malloc(sizeof(char) * SIZEBUFFER + 2);
+		line = malloc(sizeof(char) * SIZEBUFFER + 2);
 		if (!line)
 			exit(100);
 		line[SIZEBUFFER] = '\0';
@@ -95,7 +93,7 @@ void get_simple_args(int argc, char **argv __attribute__((unused)), char *args _
 		{
 			if (args[i] == ' ')
 				exists_space++;
-			/*if (args[i] == EOF)
+			/**if (args[i] == EOF)
 				free(args);
 			exit(0);*/
 			i++;
@@ -107,22 +105,22 @@ void get_simple_args(int argc, char **argv __attribute__((unused)), char *args _
 			pid_launch((char *)command);
 		free(args);
 	}
-	else if(argc == 2)
+	else if (argc == 2)
 		pid_launch(argv[1]);
 }
 void _error(void)
-{	
-	printf("/%s: No such file or directory\n",__FILE__);
+{
+	printf("/%s: No such file or directory\n", __FILE__);
 }
 
 void pid_launch(char *command)
 {
 	pid_t pid;
-	char *envp[] = {"",NULL};
+	char *envp[] = {"", NULL};
 	/*char *envp[] = {"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin",NULL};*/
 	int status;
 	char *_argv[] = {command, NULL};
-	
+
 	if (strlen(command) > 0)
 	{
 		/** create id process (parent and chill) in when use to launch command*/
@@ -138,8 +136,8 @@ void pid_launch(char *command)
 			exit(102);
 		}
 		/** always wait the pid is kill*/
-		do{
+		do {
 			waitpid(pid, &status, 0);
-		}while(!WIFEXITED(status) && !WIFSIGNALED(status));
+		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 	}
 }
