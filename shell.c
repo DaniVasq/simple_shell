@@ -17,8 +17,9 @@
 void prompt(void);
 int listenread(char *);
 void get_simple_args(int, char **, char *);
-void get_simple_args2(char *);
+void pid_launch(char *);
 char** str_split(char* a_str, const char a_delim);
+void _error(void);
 
 /** fn entry to launch shell program*/
 /** this fn allow get data of the client terminal to after process, when it's pass the fn is call newly*/
@@ -26,33 +27,35 @@ int main (int argc, char *argv[] __attribute((unused)))
 {
 	/** pointer used to save data input of the terminal client */
 	char *line;
-	long int i = 0;
-	long int i2 = 0;
 	char *argv2[] = {__FILE__, NULL};
+	int _isatty;
 
-        /** launch prompt */
-	prompt();
-
+	_isatty = isatty(0);
 	if (argc == 1)
 	{
+        	/** launch prompt */
+		if (_isatty != 0)
+			prompt();
+
         	line = malloc(sizeof(char) * SIZEBUFFER + 2);
 		if (!line)
 			exit(100);
 		line[SIZEBUFFER] = '\0';
 
 		/** init the read and write data input of client, it's recursive fn*/
-		if(listenread(line))
-			printf("get data line >> %s\n", line);
+		if (listenread(line))
+			;
+			/*printf("get data line >> %s\n", line);*/
 	}
 
 	/** parse the pointer to exec the command*/
 	get_simple_args(argc, argv, line);
 
-	/** the memory is unblock*/
-	free(line);
-
+	/**fseek(stdin, 0, SEEK_END);*/
+	fflush(stdin);
 	/** call himself, fn recursive */
-	/*main(1, argv2);*/
+	if (_isatty != 0)
+		main(1, argv2);
 	return (1);
 }
 /** Description: this fn allow print symbol or mesage before that user write*/
@@ -69,6 +72,7 @@ int listenread(char *buffer)
 	size_t bufsize = SIZEBUFFER;
 	size_t c;
 
+	/**fflush(stdin);*/
 	c = getline(&buffer, &bufsize, stdin);
 	if (!c)
 		return (-1);
@@ -81,46 +85,61 @@ int listenread(char *buffer)
 void get_simple_args(int argc, char **argv __attribute__((unused)), char *args __attribute__((unused)))
 {
 	char delim[] = " \n";
-	pid_t pid;
-	char *envp[] = {"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin",NULL};
 	char *command;
-	int status;
-	int i = 0;
-	int existsdelim = 0;
+	int exists_space = 0;
+	int i = 0, t = 0;
 
-	if (argc == 1)
+	if (argc == 1 && strlen(args) > 1)
 	{
 		while (args[i] != '\0')
+		{
+			if (args[i] == ' ')
+				exists_space++;
+			/*if (args[i] == EOF)
+				free(args);
+			exit(0);*/
 			i++;
+		}
 		command = (char *)strtok(args, delim);
-
-		if (i > 0)
-			get_simple_args2((char *)command);
+		if (exists_space > 0)
+			_error();
+		else if (i > 0 && command != NULL)
+			pid_launch((char *)command);
+		free(args);
 	}
-	else if(argc > 1)
-		get_simple_args2(argv[1]);
+	else if(argc == 2)
+		pid_launch(argv[1]);
+}
+void _error(void)
+{	
+	printf("/%s: No such file or directory\n",__FILE__);
 }
 
-void get_simple_args2(char *command)
+void pid_launch(char *command)
 {
 	pid_t pid;
-	char *envp[] = {"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin",NULL};
+	char *envp[] = {"",NULL};
+	/*char *envp[] = {"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin",NULL};*/
 	int status;
 	char *_argv[] = {command, NULL};
-
-	pid = fork();
-	if (pid == 0)
-		if (execve(command, _argv, envp) == -1)
-		{
-			printf("Error execve\n");
-			exit(103);
-		}
-	else if (pid < 0)
+	
+	if (strlen(command) > 0)
 	{
-		printf("Error pid < 0\n");
-		exit(102);
-	}
+		/** create id process (parent and chill) in when use to launch command*/
+		pid = fork();
+		if (pid == 0)
+			if (execve(command, _argv, envp) == -1)
+			{
+				_error();
+				exit(103);
+			}
+		else if (pid < 0)
+		{
+			exit(102);
+		}
+		/** always wait the pid is kill*/
 		do{
 			waitpid(pid, &status, 0);
 		}while(!WIFEXITED(status) && !WIFSIGNALED(status));
+	}
 }
