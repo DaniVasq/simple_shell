@@ -16,16 +16,14 @@ void prompt(void)
  *@buffer: pointer
  * Return: 1 is successful, -1 if error.
  */
-int listenread(char *buffer)
+long int listenread(char *buffer)
 {
 	size_t bufsize = SIZEBUFFER;
 	size_t c;
 
 	/**fflush(stdin);*/
 	c = getline(&buffer, &bufsize, stdin);
-	if (!c)
-		return (-1);
-	return (1);
+	return ((long int)c);
 }
 /**
  * get_simple_args - this fn splita the string when space char is found
@@ -41,15 +39,12 @@ void get_simple_args(int argc, char **argv, char *args)
 	int exists_space = 0;
 	int i = 0, t = 0;
 
-	if (argc == 1 && strlen(args) > 1)
+	if (argc == 1)
 	{
 		while (args[i] != '\0')
 		{
 			if (args[i] == ' ')
 				exists_space++;
-			/**if (args[i] == EOF)
-				free(args);
-			exit(0);*/
 			i++;
 		}
 		command = (char *)strtok(args, delim);
@@ -82,7 +77,7 @@ void pid_launch(char *command)
 	int status;
 	char *_argv[] = {command, NULL};
 
-	if (strlen(command) > 0)
+	if (_strlen(command) > 0)
 	{
 		/** create id process (parent & child) to launch command*/
 		pid = fork();

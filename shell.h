@@ -11,11 +11,11 @@
 #include <unistd.h>
 #include <assert.h>
 #define SIZEBUFFER 1024
-
+void intHandler(int i);
 void prompt(void);
-int listenread(char *);
+long int listenread(char *);
 void get_simple_args(int, char **, char *);
 void pid_launch(char *);
 void _error(void);
-
+long int _strlen(char *);
 #endif
