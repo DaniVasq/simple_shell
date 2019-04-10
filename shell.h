@@ -18,4 +18,4 @@ void get_simple_args(int, char **, char *);
 void pid_launch(char *);
 void _error(void);
 
-#enfif
+#endif
