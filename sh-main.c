@@ -1,7 +1,7 @@
-3#include "shell.h"
+#include "shell.h"
 
 /**
-  * main - entry
+  * main - Entry to launch program
   *
   * Return: 1.
   */
