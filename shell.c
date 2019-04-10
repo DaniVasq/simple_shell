@@ -1,3 +1,4 @@
+#include "shell.h"
 /**
  * prompt - function for the print symbol before the user types
  *
@@ -32,7 +33,8 @@ int listenread(char *buffer)
  *@argv: where the arguments are contained
  *@args: arguments
  */
-void get_simple_args(int argc, char **argv __attribute__((unused)), char *args __attribute__((unused)))
+/*void get_simple_args(int argc, char **argv __attribute__((unused)), char *args __attribute__((unused)))*/
+void get_simple_args(int argc, char **argv, char *args)
 {
 	char delim[] = " \n";
 	char *command;

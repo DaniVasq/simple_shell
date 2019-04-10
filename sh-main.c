@@ -2,10 +2,11 @@
 
 /**
   * main - Entry to launch program
-  *
+  * @argc: argument counter
+  * @argv: arguments
   * Return: 1.
   */
-int main(int argc, char *argv[] __attribute((unused)))
+int main(int argc, char *argv[])
 {
 /** pointer used to save data input of the terminal client */
 	char *line;
