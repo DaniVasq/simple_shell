@@ -1,4 +1,6 @@
 #include "shell.h"
+void pid_launch(char *command, char **_argv);
+
 /**
  * prompt - function for the print symbol before the user types
  *
@@ -23,7 +25,9 @@ long int listenread(char *buffer)
 
 	/**fflush(stdin);*/
 	c = getline(&buffer, &bufsize, stdin);
-	return ((long int)c);
+	if (!c)
+		return (-1);
+	return (1);
 }
 /**
  * get_simple_args - this fn splita the string when space char is found
@@ -38,8 +42,11 @@ void get_simple_args(int argc, char **argv, char *args)
 	char *command;
 	int exists_space = 0;
 	int i = 0, t = 0;
+	char **options;
+	char *argx;
+	int j = 0;
 
-	if (argc == 1)
+	if (argc == 1 && _strlen(args) > 1)
 	{
 		while (args[i] != '\0')
 		{
@@ -47,15 +54,24 @@ void get_simple_args(int argc, char **argv, char *args)
 				exists_space++;
 			i++;
 		}
+		options = malloc(sizeof(int) * exists_space + 1);
+		if (options == NULL)
+			exit(107);
+		argx = strtok(args, delim);
+
+		while (argx != NULL)
+		{
+			options[j] = argx;
+			argx = strtok(NULL, delim);
+			j++;
+		}
 		command = (char *)strtok(args, delim);
-		if (exists_space > 0)
-			_error();
-		else if (i > 0 && command != NULL)
-			pid_launch((char *)command);
+		if (i > 0 && command != NULL)
+			pid_launch((char *)command, options);
 		free(args);
 	}
-	else if (argc == 2)
-		pid_launch(argv[1]);
+	/**else if (argc == 2)
+	   pid_launch(argv[1], argv);*/
 }
 /**
  * _error - allows the error message to be printed in shell
@@ -69,15 +85,16 @@ void _error(void)
  * pid_launch - allows shell to be launched
  *@command: the command needed to pass to the machine to perform
  */
-void pid_launch(char *command)
+void pid_launch(char *command, char **_argv)
 {
 	pid_t pid;
 	char *envp[] = {"", NULL};
 	/*char *envp[] = {"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin",NULL};*/
 	int status;
-	char *_argv[] = {command, NULL};
+	/**char *_argv[] = {command, NULL};*/
 
-	if (_strlen(command) > 0)
+
+	if (strlen(command) > 0)
 	{
 		/** create id process (parent & child) to launch command*/
 		pid = fork();
