@@ -1,6 +1,4 @@
 #include "shell.h"
-void pid_launch(char *command, char **_argv);
-
 /**
  * prompt - function for the print symbol before the user types
  *
@@ -35,45 +33,47 @@ int listenread(char *buffer)
  *@argv: where the arguments are contained
  *@args: arguments
  */
-/*void get_simple_args(int argc, char **argv __attribute__((unused)), char *args __attribute__((unused)))*/
 void get_simple_args(int argc, char **argv, char *args)
 {
 	char delim[] = " \n";
-	char *command;
 	int exists_space = 0;
-	int i = 0, t = 0;
+	int i = 0;
 	char **options;
 	char *argx;
 	int j = 0;
+	int args_max = 255;
 
-	if (argc == 1 && _strlen(args) > 1)
+	if (argc == 1)
 	{
-		while (args[i] != '\0')
+		if ((int)args[0] == 10)
+			free(args);
+		else
 		{
-			if (args[i] == ' ')
-				exists_space++;
-			i++;
+			options = malloc(sizeof(char *) * args_max);
+			if (options == NULL)
+			{
+				free(options);
+				exit(111);
+			}
+			argx = strtok(args, delim);
+			while (argx != NULL)
+			{
+				printf("argx is %s\n", argx);
+				options[j] = argx;
+				argx = strtok(NULL, delim);
+                        	j++;
+			}
+			options[j] = NULL;
+			pid_launch(options);
+			free(args);
+			free(options);
 		}
-		options = malloc(sizeof(int) * exists_space + 1);
-		if (options == NULL)
-			exit(107);
-		argx = strtok(args, delim);
-
-		while (argx != NULL)
-		{
-			options[j] = argx;
-			argx = strtok(NULL, delim);
-			j++;
-		}
-		command = (char *)strtok(args, delim);
-		if (i > 0 && command != NULL)
-			pid_launch((char *)command, options);
-		free(args);
-		free(options);
 	}
-	else if (argc == 2)
-		args_pop(&argv);
-	/**pid_launch(argv[0], argv);*/
+	else if (argc >= 2)
+	{
+		args_pop(argv);
+		pid_launch(argv);
+	}
 }
 /**
  * _error - allows the error message to be printed in shell
@@ -87,32 +87,62 @@ void _error(void)
  * pid_launch - allows shell to be launched
  *@command: the command needed to pass to the machine to perform
  */
-void pid_launch(char *command, char **_argv)
+void pid_launch(char **_argv)
 {
 	pid_t pid;
 	char *envp[] = {"", NULL};
 	/*char *envp[] = {"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin",NULL};*/
 	int status;
-	/**char *_argv[] = {command, NULL};*/
-
-
-	if (strlen(command) > 0)
-	{
-		/** create id process (parent & child) to launch command*/
-		pid = fork();
-		if (pid == 0)
-			if (execve(command, _argv, envp) == -1)
-			{
-				_error();
-				exit(103);
-			}
-		else if (pid < 0)
+	/*char *tmpargs[] = {"/bin/ls", NULL};*/
+	
+	/** create id process (parent & child) to launch command*/
+	pid = fork();
+	if (pid == 0)
+		if (execve(_argv[0], _argv, envp) == -1)
 		{
-			exit(102);
+			_error();
+			exit(103);
 		}
-		/** always wait the pid is kill*/
-		do {
-			waitpid(pid, &status, 0);
-		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+	else if (pid < 0)
+	{
+		exit(102);
 	}
+	/** always wait the pid is kill*/
+	do {
+		waitpid(pid, &status, 0);
+	} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+}
+
+
+
+
+/**
+ * _realloc -  reallocates a memory block
+ * @ptr: is a pointer to the memory previously allocated
+ * @old_size: is the size, in bytes, of the allocated space for ptr
+ * @new_size: is the new size, in bytes of the new memory block
+ *
+ * Return: pointer to the new allocation with the values from prev
+ */
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
+{
+	void *p;
+	int i = 0;
+
+	if (new_size == old_size)
+		return (ptr);
+	if (new_size == 0 && ptr != NULL)
+	{
+		free(ptr);
+		return (NULL);
+	}
+	p = malloc(new_size);
+	if (p == NULL)
+	{
+		free(p);
+		return (NULL);
+	}
+
+	free(ptr);
+	return (p);
 }

@@ -8,7 +8,7 @@
   * @argv: arguments
   * Return: 1.
   */
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
 	/** pointer used to save data input of the terminal client */
 	char *line;
@@ -16,14 +16,13 @@ int main(int argc, char *argv[])
 	int _isatty;
 
 	signal(SIGINT, intHandler);
-	
 	_isatty = isatty(0);
 	if (argc == 1)
 	{
 		/** launch prompt */
 		if (_isatty != 0)
 		prompt();
-		line = malloc(sizeof(char) * SIZEBUFFER + 2);
+		line = malloc(sizeof(char) * SIZEBUFFER + 1);
 		if (!line)
 			exit(100);
 		line[SIZEBUFFER] = '\0';
@@ -54,12 +53,3 @@ void intHandler(int i)
 	fflush(stdout);
 }
 
-
-long int _strlen(char *p)
-{
-	long int i = 0;
-
-	while (p[i] != '\0')
-		i++;
-	return (i);
-}

@@ -16,9 +16,9 @@ void intHandler(int i);
 void prompt(void);
 int listenread(char *);
 void get_simple_args(int, char **, char *);
-/**void pid_launch(char *, char *);*/
+void pid_launch(char **);
 void _error(void);
 long int _strlen(char *);
-int args_pop(char ***);
+int args_pop(char **);
 
 #endif

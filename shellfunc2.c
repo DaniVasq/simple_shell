@@ -43,12 +43,14 @@ long int _strlen(char *p)
  *
  * Return: 0 on success, -1 on error
  */
-int args_pop(char ***p)
+int args_pop(char **p)
 {
-	int index;
-	if (!p)
-		return (-1);
-	while (p[index] != '\0')
-		p[index] = p[index++];
+	int index = 0;
+	
+	while (p[index] != NULL)
+	{
+		p[index] = p[index+1];
+		index++;
+	}
 	return (0);
 }
