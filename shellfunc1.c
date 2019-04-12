@@ -38,10 +38,10 @@ void get_simple_args(int argc, char **argv, char *args)
 	char delim[] = " \n";
 	int exists_space = 0;
 	int i = 0;
-	char *options[1];
+	char **options;
 	char *argx;
 	int j = 0;
-	int e = 0;
+	int args_max = 255;
 
 	if (argc == 1)
 	{
@@ -49,26 +49,24 @@ void get_simple_args(int argc, char **argv, char *args)
 			free(args);
 		else
 		{
-
-			
-			/*
-			while (args[i] != '\0')
+			options = malloc(sizeof(char *) * args_max);
+			if (options == NULL)
 			{
-				if (args[i] == ' ')
-					exists_space++;
-				i++;
+				free(options);
+				exit(111);
 			}
-			*/
 			argx = strtok(args, delim);
 			while (argx != NULL)
 			{
+				printf("argx is %s\n", argx);
 				options[j] = argx;
 				argx = strtok(NULL, delim);
                         	j++;
 			}
+			options[j] = NULL;
 			pid_launch(options);
 			free(args);
-			/*free(options);*/
+			free(options);
 		}
 	}
 	else if (argc >= 2)
