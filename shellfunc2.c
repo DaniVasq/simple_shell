@@ -1,5 +1,4 @@
 #include "shell.h"
-
 /**
  * char *_strcat - concatenates two strings.
  * @dest: *dest - destination
@@ -25,7 +24,6 @@ char *_strcat(char *dest, char *src)
 	dest[i + i2] = src[i2];
 	return (dest);
 }
-
 /**
  * char _strelen - returns length of a string.
  *

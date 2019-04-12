@@ -20,5 +20,6 @@ void pid_launch(char **);
 void _error(void);
 long int _strlen(char *);
 int args_pop(char **);
-
+char *getpath(char **);
+char **setpathparams(char *);
 #endif

@@ -1,19 +1,29 @@
 #include "shell.h"
 #include <signal.h>
 
-
 /**
   * main - Entry to launch program
   * @argc: argument counter
   * @argv: arguments
   * Return: 1.
   */
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **env)
 {
 	/** pointer used to save data input of the terminal client */
 	char *line;
 	char *argv2[] = {__FILE__, NULL};
 	int _isatty;
+	char *_PATH = "";
+	char **_ARGS_PATH;
+
+	_PATH = getpath(env);
+	printf("the path is %s\n", _PATH);
+	_ARGS_PATH = setpathparams(_PATH);
+	while(*_ARGS_PATH != NULL)
+	{
+		printf("the params of the path are %s\n", *_ARGS_PATH);
+		_ARGS_PATH++;
+	}
 
 	signal(SIGINT, intHandler);
 	_isatty = isatty(0);
@@ -44,7 +54,7 @@ int main(int argc, char **argv)
 	fflush(stdout);
 	/** call himself, fn recursive */
 	if (_isatty != 0)
-		main(1, argv2);
+		main(1, argv2, env);
 	return (1);
 }
 
@@ -53,3 +63,40 @@ void intHandler(int i)
 	fflush(stdout);
 }
 
+char *getpath(char **env)
+{	
+	char *tmp;
+
+	while (*env != NULL)
+	{
+		tmp = strtok(*env, "=");
+		if (strcmp(tmp,"PATH") == 0)
+		{
+			tmp = strtok(NULL, "\0");
+			return tmp;
+		}
+		env++;
+	}
+	return "";
+}
+
+char **setpathparams(char *path)
+{
+	int i = 0;
+	char *p;
+	int limitparams = 255;
+	char **params;
+
+	params = malloc(sizeof(char *) * limitparams);
+	if(params == NULL)
+		exit(114);
+	p = strtok(path, ":");
+	params[i] = p;
+	while (p != NULL)
+	{
+		i++;
+		p = strtok(NULL, ":");
+		params[i] = p;
+	}
+	return params;
+}
