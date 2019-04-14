@@ -44,11 +44,42 @@ long int _strlen(char *p)
 int args_pop(char **p)
 {
 	int index = 0;
-	
+
 	while (p[index] != NULL)
 	{
 		p[index] = p[index+1];
 		index++;
 	}
 	return (0);
+}
+
+/**
+ * update_cmd - access to string and updated command
+ *
+ * Return: status (error or no error)
+ */
+int update_cmd(char **cmd, char **_path)
+{
+
+	int index = 0;
+	int status = -1;
+	char *temp;
+
+	if (cmd == NULL || _path == NULL)
+		exit(110);
+
+	else if (!cmd[index])
+		exit(111);
+	else
+		while (_path[index])
+		{
+			index++;
+			temp = _strcat(_path[index], cmd[index]);
+				if (access(temp, X_OK) == 0)
+				{
+					cmd[index] = temp;
+					status = 1;
+				}
+		}
+	return (status);
 }

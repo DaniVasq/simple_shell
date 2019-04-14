@@ -33,7 +33,7 @@ int listenread(char *buffer)
  *@argv: where the arguments are contained
  *@args: arguments
  */
-void get_simple_args(int argc, char **argv, char *args)
+void get_simple_args(int argc, char **argv, char *args, char **_path)
 {
 	char delim[] = " \n";
 	int exists_space = 0;
@@ -65,7 +65,8 @@ void get_simple_args(int argc, char **argv, char *args)
                         	j++;
 			}
 			options[j] = NULL;
-			pid_launch(options);
+			if (update_cmd(options, _path))
+			    pid_launch(options);
 			free(args);
 			free(options);
 		}
@@ -73,6 +74,7 @@ void get_simple_args(int argc, char **argv, char *args)
 	else if (argc >= 2)
 	{
 		args_pop(argv);
+		update_cmd(argv, _path);
 		pid_launch(argv);
 	}
 }

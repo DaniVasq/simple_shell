@@ -15,7 +15,9 @@ int main(int argc, char **argv, char **env)
 	int _isatty;
 	char *_PATH = "";
 	char **_ARGS_PATH;
+	char **_envcopy;
 
+	_envcopy = env;
 	_PATH = getpath(env);
 	printf("the path is %s\n", _PATH);
 	_ARGS_PATH = setpathparams(_PATH);
@@ -47,14 +49,13 @@ int main(int argc, char **argv, char **env)
 	}
 
 	/** parse the pointer to exec the command*/
-	get_simple_args(argc, argv, line);
-	
+	get_simple_args(argc, argv, line, _ARGS_PATH);
 	/**fseek(stdin, 0, SEEK_END);*/
 	fflush(stdin);
 	fflush(stdout);
 	/** call himself, fn recursive */
 	if (_isatty != 0)
-		main(1, argv2, env);
+		main(1, argv2, _envcopy);
 	return (1);
 }
 

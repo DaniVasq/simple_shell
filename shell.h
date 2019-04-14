@@ -15,11 +15,13 @@ char *_strcat(char *dest, char *src);
 void intHandler(int i);
 void prompt(void);
 int listenread(char *);
-void get_simple_args(int, char **, char *);
+void get_simple_args(int, char **, char *, char **);
 void pid_launch(char **);
 void _error(void);
 long int _strlen(char *);
 int args_pop(char **);
 char *getpath(char **);
 char **setpathparams(char *);
+int update_cmd(char **, char**);
+
 #endif
