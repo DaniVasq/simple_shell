@@ -21,11 +21,14 @@ int main(int argc, char **argv, char **env)
 	_PATH = getpath(env);
 	printf("the path is %s\n", _PATH);
 	_ARGS_PATH = setpathparams(_PATH);
+
 	while(*_ARGS_PATH != NULL)
 	{
+		*_ARGS_PATH = strcat(*_ARGS_PATH,"/");
 		printf("the params of the path are %s\n", *_ARGS_PATH);
 		_ARGS_PATH++;
 	}
+	*_ARGS_PATH = "/bin/";
 
 	signal(SIGINT, intHandler);
 	_isatty = isatty(0);

@@ -60,11 +60,11 @@ int args_pop(char **p)
  */
 int update_cmd(char **cmd, char **_path)
 {
-
 	int index = 0;
 	int status = -1;
 	char *temp;
 
+	printf("entry fn update_cmd is %s\n", *_path);
 	if (cmd == NULL || _path == NULL)
 		exit(110);
 
