@@ -1,3 +1,6 @@
 #!/bin/bash
+#please put your name of your executable Shell program
 SHELL='./shell'
-echo exit | $SHELL | wc -l | awk '{ if($1 == 0) print "ok"; else print "ko"}'
+MSG_PROMPT="Welcome, the next test is for validate you exit command of the Shell"
+echo $MSG_PROMPT
+echo exit | $SHELL | wc -l | awk '{ if($1 == 0) print "Test Ok"; else print "Test Fail"}'
