@@ -69,7 +69,7 @@ char *getpath(char **env)
 	while (*env != NULL)
 	{
 		tmp = strtok(*env, "=");
-		if (strcmp(tmp, "PATH") == 0)
+		if (_strcmp(tmp, "PATH") == 0)
 		{
 			tmp = strtok(NULL, "\0");
 			return (tmp);

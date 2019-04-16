@@ -25,7 +25,7 @@ int listenread(char *buffer)
 	c = getline(&buffer, &bufsize, stdin);
 	if (c == EOF)
 		return (-1);
-	else if (strcmp(buffer, "exit") == 10)
+	else if (_strcmp(buffer, "exit") == 10)
 		return (-1);
 	return (1);
 }
