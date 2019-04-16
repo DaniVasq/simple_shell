@@ -22,9 +22,6 @@ int main(int argc, char **argv, char **env)
 	_isatty = isatty(0);
 	if (argc == 1)
 	{
-		/** launch prompt */
-		if (_isatty != 0)
-		prompt();
 		line = malloc(sizeof(char) * SIZEBUFFER + 1);
 		if (!line)
 			exit(100);
@@ -41,6 +38,9 @@ int main(int argc, char **argv, char **env)
 
 	/** parse the pointer to exec the command*/
 	get_simple_args(argc, argv, line, _ARGS_PATH);
+	/** launch prompt */
+	if (_isatty != 0)
+		prompt();
 	/**fseek(stdin, 0, SEEK_END);*/
 	fflush(stdin);
 	fflush(stdout);
