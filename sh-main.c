@@ -14,6 +14,7 @@ int main(int argc, char **argv, char **env)
 	char *line;
 	char *argv2[] = {__FILE__, NULL};
 	int _isatty;
+	int statusbuffer = 0;
 	char *_ARGS_PATH[] = {"/bin/",
 "/sbin/", "/usr/local/sbin/", "/usr/local/bin/",
 "/usr/sbin/", "/usr/bin/", "/snap/bin/", NULL};
@@ -28,7 +29,8 @@ int main(int argc, char **argv, char **env)
 		line[SIZEBUFFER] = '\0';
 
 		/** init the read and write data input of client, it's recursive fn*/
-		if (listenread(line) == -1)
+		statusbuffer = listenread(line);
+		if (statusbuffer == -1)
 		{
 			free(line);
 			return (0);
@@ -45,9 +47,9 @@ int main(int argc, char **argv, char **env)
 	fflush(stdin);
 	fflush(stdout);
 	/** call himself, fn recursive */
-	if (_isatty != 0)
+	if (_isatty != 0 || statusbuffer != -1)
 		main(1, argv2, env);
-	return (1);
+	return (0);
 }
 /**
  * intHandler - signal handler

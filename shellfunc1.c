@@ -7,9 +7,9 @@
 void prompt(void)
 {
 	/** symbol > */
-	putchar(62);
+	/*putchar(62);*/
 	/** symbol space */
-	putchar(32);
+	/*putchar(32);*/
 }
 /**
  * listenread - get char the client terminal & call fn until char is '\n'
@@ -44,7 +44,6 @@ void get_simple_args(int argc, char **argv, char *args, char **_path)
 	int j = 0;
 	int args_max = 255;
 	(void)_path;
-	/*ARG_MAX*/
 
 	if (argc == 1)
 	{
@@ -67,7 +66,8 @@ void get_simple_args(int argc, char **argv, char *args, char **_path)
 			}
 			options[j] = NULL;
 			/*if (update_cmd(options, _path))*/
-			    pid_launch(options);
+			if (options[0] != NULL && _strlen(options[0]) > 0)
+				pid_launch(options);
 			free(args);
 			free(options);
 		}
@@ -79,6 +79,7 @@ void get_simple_args(int argc, char **argv, char *args, char **_path)
 		pid_launch(argv);
 	}
 }
+
 /**
  * _error - allows the error message to be printed in shell
  *
