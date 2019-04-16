@@ -1,6 +1,5 @@
 #ifndef SHELL_H
 #define SHELL_H
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,5 +23,4 @@ int args_pop(char **);
 char *getpath(char **);
 char **setpathparams(char *);
 int update_cmd(char **, char**);
-
 #endif
