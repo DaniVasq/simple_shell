@@ -41,14 +41,18 @@ long int _strlen(char *p)
  *
  * Return: 0 on success, -1 on error
  */
-int args_pop(char **p)
+int args_pop(_track_shell *raw)
 {
 	int index = 0;
 
-	while (p[index] != NULL)
+	if (strcmp(raw->mode, "no-interactive") == 0)
 	{
-		p[index] = p[index+1];
-		index++;
+		while (raw->argv[index] != NULL)
+		{
+			raw->argv[index] = raw->argv[index+1];
+			index++;
+		}
+		raw->mode = "interactive";
 	}
 	return (0);
 }
@@ -58,28 +62,40 @@ int args_pop(char **p)
  *
  * Return: status (error or no error)
  */
-int update_cmd(char **cmd, char **_path)
+int update_cmd(_track_shell *raw)
 {
 	int index = 0;
 	int status = -1;
-	char *temp;
+	char *dir = NULL;
+	char *file = NULL;
+	char *fullpath = NULL;
 
-	printf("entry fn update_cmd is %s\n", *_path);
-	if (cmd == NULL || _path == NULL)
+	if (raw->argv[0] == NULL || raw->path == NULL)
 		exit(110);
-
-	else if (!cmd[index])
+	else if (!raw->argv[index])
 		exit(111);
 	else
-		while (_path[index])
+	{	
+		dir = strdup(*(raw->args_path + index));
+		raw->fullpath = NULL;
+		while(index < raw->nargs_path)
 		{
+			dir = strdup(*(raw->args_path + index));
+			file = strdup(raw->argv[0]);
+			fullpath = strcat(dir, "/");
+			fullpath = strcat(fullpath, file);
+			/*printf("find dir= %s,file= %s, fullpath=%s\n", dir, file, fullpath);*/
+			if (access(fullpath, X_OK) == 0)
+			{
+				/*printf("the params of the path are %s\n", fullpath);*/
+				raw->fullpath = fullpath;
+				status = 1;
+				return (status);
+			}
 			index++;
-			temp = _strcat(_path[index], cmd[index]);
-				if (access(temp, X_OK) == 0)
-				{
-					cmd[index] = temp;
-					status = 1;
-				}
 		}
+		free(dir);
+		free(file);
+	}
 	return (status);
 }
