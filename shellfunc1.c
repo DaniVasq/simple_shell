@@ -34,6 +34,7 @@ int listenread(char *buffer)
  *@argc: argument counter
  *@argv: where the arguments are contained
  *@args: arguments
+ *@_path: path
  */
 void get_simple_args(int argc, char **argv, char *args, char **_path)
 {
@@ -62,7 +63,7 @@ void get_simple_args(int argc, char **argv, char *args, char **_path)
 			{
 				options[j] = argx;
 				argx = strtok(NULL, delim);
-                        	j++;
+				j++;
 			}
 			options[j] = NULL;
 			/*if (update_cmd(options, _path))*/
@@ -88,16 +89,14 @@ void _error(void)
 }
 /**
  * pid_launch - allows shell to be launched
- *@command: the command needed to pass to the machine to perform
+ *
+ *@_argv: argument container
  */
 void pid_launch(char **_argv)
 {
 	pid_t pid;
 	char *envp[] = {"", NULL};
-	/*char *envp[] = {"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin",NULL};*/
 	int status;
-	/*char *tmpargs[] = {"/bin/ls", NULL};*/
-	
 	/** create id process (parent & child) to launch command*/
 	pid = fork();
 	if (pid == 0)

@@ -25,20 +25,21 @@ char *_strcat(char *dest, char *src)
 	return (dest);
 }
 /**
- * char _strelen - returns length of a string.
- *
+ * _strlen - returns length of a string.
+ *@p: pointer
  * Return: length
  */
 long int _strlen(char *p)
 {
 	long int i = 0;
+
 	while (p[i] != '\0')
 		i++;
 	return (i);
 }
 /**
  * args_pop - takes the next value of argument
- *
+ *@p: pointer
  * Return: 0 on success, -1 on error
  */
 int args_pop(char **p)
@@ -47,7 +48,7 @@ int args_pop(char **p)
 
 	while (p[index] != NULL)
 	{
-		p[index] = p[index+1];
+		p[index] = p[index + 1];
 		index++;
 	}
 	return (0);
@@ -55,7 +56,8 @@ int args_pop(char **p)
 
 /**
  * update_cmd - access to string and updated command
- *
+ *@cmd: command
+ *@_path: path
  * Return: status (error or no error)
  */
 int update_cmd(char **cmd, char **_path)
