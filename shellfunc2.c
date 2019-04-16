@@ -64,6 +64,7 @@ int update_cmd(char **cmd, char **_path)
 	int index = 0;
 	int status = -1;
 	char *temp;
+	char *temp2;
 
 	if (cmd == NULL || _path == NULL)
 		exit(110);
@@ -71,14 +72,16 @@ int update_cmd(char **cmd, char **_path)
 	else if (!cmd[index])
 		exit(111);
 	else
-		while (_path[index])
+		while (_path[index] != NULL)
 		{
 			index++;
-			temp = _strcat(_path[index], cmd[index]);
+			temp2 = _path[index];
+			temp = _strcat(temp2, cmd[0]);
 				if (access(temp, X_OK) == 0)
 				{
-					cmd[index] = temp;
+					cmd[0] = temp;
 					status = 1;
+					return (status);
 				}
 		}
 	return (status);

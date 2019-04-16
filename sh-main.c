@@ -13,20 +13,8 @@ int main(int argc, char **argv, char **env)
 	char *line;
 	char *argv2[] = {__FILE__, NULL};
 	int _isatty;
-	char *_PATH = "";
-	char **_ARGS_PATH;
-	char **_envcopy;
-
-	_envcopy = env;
-	_PATH = getpath(env);
-	printf("the path is %s\n", _PATH);
-	_ARGS_PATH = setpathparams(_PATH);
-	while(*_ARGS_PATH != NULL)
-	{
-		printf("the params of the path are %s\n", *_ARGS_PATH);
-		_ARGS_PATH++;
-	}
-
+	char *_ARGS_PATH[] = {"/bin/","/sbin/","/usr/local/sbin/","/usr/local/bin/","/usr/sbin/","/usr/bin/","/snap/bin/", NULL};
+	
 	signal(SIGINT, intHandler);
 	_isatty = isatty(0);
 	if (argc == 1)
@@ -55,11 +43,11 @@ int main(int argc, char **argv, char **env)
 	fflush(stdout);
 	/** call himself, fn recursive */
 	if (_isatty != 0)
-		main(1, argv2, _envcopy);
+		main(1, argv2, env);
 	return (1);
 }
 
-void intHandler(int i)
+void intHandler(int i __attribute__((unused)))
 {
 	fflush(stdout);
 }

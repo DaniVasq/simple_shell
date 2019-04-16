@@ -19,11 +19,13 @@ void prompt(void)
 int listenread(char *buffer)
 {
 	size_t bufsize = SIZEBUFFER;
-	size_t c;
+	ssize_t c;
 
 	/**fflush(stdin);*/
 	c = getline(&buffer, &bufsize, stdin);
 	if (c == EOF)
+		return (-1);
+	else if (strcmp(buffer, "exit") == 10)
 		return (-1);
 	return (1);
 }
@@ -36,12 +38,11 @@ int listenread(char *buffer)
 void get_simple_args(int argc, char **argv, char *args, char **_path)
 {
 	char delim[] = " \n";
-	int exists_space = 0;
-	int i = 0;
 	char **options;
 	char *argx;
 	int j = 0;
 	int args_max = 255;
+	(void)_path;
 	/*ARG_MAX*/
 
 	if (argc == 1)
@@ -59,13 +60,12 @@ void get_simple_args(int argc, char **argv, char *args, char **_path)
 			argx = strtok(args, delim);
 			while (argx != NULL)
 			{
-				printf("argx is %s\n", argx);
 				options[j] = argx;
 				argx = strtok(NULL, delim);
                         	j++;
 			}
 			options[j] = NULL;
-			if (update_cmd(options, _path))
+			/*if (update_cmd(options, _path))*/
 			    pid_launch(options);
 			free(args);
 			free(options);
@@ -74,7 +74,7 @@ void get_simple_args(int argc, char **argv, char *args, char **_path)
 	else if (argc >= 2)
 	{
 		args_pop(argv);
-		update_cmd(argv, _path);
+		/*update_cmd(argv, _path);*/
 		pid_launch(argv);
 	}
 }
@@ -101,11 +101,13 @@ void pid_launch(char **_argv)
 	/** create id process (parent & child) to launch command*/
 	pid = fork();
 	if (pid == 0)
+	{
 		if (execve(_argv[0], _argv, envp) == -1)
 		{
 			_error();
 			exit(103);
 		}
+	}
 	else if (pid < 0)
 	{
 		exit(102);
