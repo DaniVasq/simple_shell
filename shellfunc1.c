@@ -35,6 +35,7 @@ int listenread(char *buffer)
  *@argv: where the arguments are contained
  *@args: arguments
  *@_path: path
+ *@ev: pointer that contain enviroment vars
  * Return: status of execution
  */
 int get_simple_args(int argc, char **argv, char *args, char **_path, char **ev)
