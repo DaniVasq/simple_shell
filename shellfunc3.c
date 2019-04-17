@@ -11,7 +11,8 @@ int printenv(char **env)
 
 	while (*(env + i) != NULL)
 	{
-		printf("%s\n", *(env + i));
+		write(STDOUT_FILENO, *(env + i), _strlen(*(env + i)));
+		write(STDOUT_FILENO, "\n", _strlen("\n"));
 		i++;
 	}
 	return (0);
