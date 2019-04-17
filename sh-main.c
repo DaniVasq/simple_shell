@@ -22,7 +22,7 @@ int main(int argc, char **argv, char **env __attribute__((unused)))
 	/*char **_ARGS_PATH = setpathparams(getpath(env));*/
 	signal(SIGINT, intHandler);
 	_isatty = isatty(0);
-	while(1)
+	while (1)
 	{
 	if (argc == 1)
 	{
@@ -30,28 +30,21 @@ int main(int argc, char **argv, char **env __attribute__((unused)))
 		if (!line)
 			exit(100);
 		line[SIZEBUFFER] = '\0';
-
-		/** init the read and write data input of client, it's recursive fn*/
 		statusbuffer = listenread(line);
 		if (statusbuffer == -1)
 		{
 			free(line);
-			/*free(_ARGS_PATH);*/
-			exit (status_pid);
+			exit(status_pid);
 		}
-		/*printf("get data line >> %s\n", line);*/
-	}	/** parse the pointer to exec the command*/
+	}
 	status_pid = get_simple_args(argc, argv, line, _ARGS_PATH);
-	/** launch prompt */
 	if (_isatty != 0)
 		prompt();
-	/**fseek(stdin, 0, SEEK_END);*/
 	fflush(stdin);
 	fflush(stdout);
+	if (_isatty == 0)
+		exit(status_pid);
 	}
-	/** call himself, fn recursive */
-	/*if (_isatty != 0 || statusbuffer != -1)
-		main(1, argv2, env);*/
 	return (status_pid);
 }
 /**
