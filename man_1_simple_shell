@@ -1,10 +1,10 @@
 .TH SimpleShell manpage "15 abril 2019" "version 1.0"
 .SH NAME
-bash - GNU-style Simple Shell
+hsh - Simple Shell
 .SH SYNOPSIS
-bash [options][file]
+hsh [options][file]
 .SH DESCRIPTION
-This simple bash is an sh-compatible command language interpreter that executes commands read from the standard input or from a file. It can be used with commands like "ls -l" to list files and directories within a directory in long format. It can also be used with commands like "pwd" which print the current working directory. Upon entering shell, a prompt will appear and when a user inputs a command to the command line, shell will read your input by using getline() function. It will read from the standard input file stream, and store the user input into a buffer as a string.
+This simple hsh is an sh-compatible command language interpreter that executes commands read from the standard input or from a file. It can be used with commands like "ls -l" to list files and directories within a directory in long format. It can also be used with commands like "pwd" which print the current working directory. Upon entering shell, a prompt will appear and when a user inputs a command to the command line, shell will read your input by using getline() function. It will read from the standard input file stream, and store the user input into a buffer as a string.
 .PP
 .B
 .br
