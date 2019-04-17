@@ -37,9 +37,7 @@ int main(int argc, char **argv, char **env)
 			return (0);
 		}
 		/*printf("get data line >> %s\n", line);*/
-	}
-
-	/** parse the pointer to exec the command*/
+	}	/** parse the pointer to exec the command*/
 	get_simple_args(argc, argv, line, _ARGS_PATH);
 	/** launch prompt */
 	if (_isatty != 0)
