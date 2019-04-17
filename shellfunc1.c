@@ -27,7 +27,7 @@ int listenread(char *buffer)
 		return (-1);
 	else if (_strcmp(buffer, "exit") == 10)
 		return (-1);
-	return (1);
+	return (0);
 }
 /**
  * get_simple_args - this fn splits the string when space char is found
@@ -36,13 +36,14 @@ int listenread(char *buffer)
  *@args: arguments
  *@_path: path
  */
-void get_simple_args(int argc, char **argv, char *args, char **_path)
+int get_simple_args(int argc, char **argv, char *args, char **_path)
 {
 	char delim[] = " \n";
 	char **options;
 	char *argx;
 	int j = 0;
 	int args_max = 255;
+	int status_pid = 0;
 	(void)_path;
 
 	if (argc == 1)
@@ -67,7 +68,7 @@ void get_simple_args(int argc, char **argv, char *args, char **_path)
 			options[j] = NULL;
 			/*if (update_cmd(options, _path))*/
 			if (options[0] != NULL && _strlen(options[0]) > 0)
-				pid_launch(options, args, _path);
+				status_pid = pid_launch(options, args, _path);
 			free(args);
 			free(options);
 		}
@@ -76,8 +77,9 @@ void get_simple_args(int argc, char **argv, char *args, char **_path)
 	{
 		args_pop(argv);
 		/*update_cmd(argv, _path);*/
-		pid_launch(argv, NULL, NULL);
+		status_pid = pid_launch(argv, NULL, _path);
 	}
+	return (status_pid);
 }
 
 /**
@@ -136,5 +138,5 @@ int pid_launch(char **_argv, char *args, char **_path)
 		exit(102); }
 	else
 		waitpid(pid, &status, 0);
-	return (WIFEXITED(status) & 255);
+	return (WEXITSTATUS(status) & 255);
 }
