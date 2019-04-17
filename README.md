@@ -7,7 +7,7 @@ This is a Simple Shell for the Holberton School Simple Shell project. In this pr
 In this shell project, the following functions were utilized:
 
 |Name |
-|:--: | :-- | :--|
+|:--: |
 |_strcpy |
 |_strlen |
 |_strcmp |
