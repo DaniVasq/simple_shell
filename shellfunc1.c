@@ -104,8 +104,7 @@ int pid_launch(char **_argv, char *args, char **_path)
 
 	pid = fork();
 	if (pid == 0)
-	{
-		file =  _argv[0];
+	{file =  _argv[0];
 		while (*(_path + j) != NULL && searchpath == 1)
 		{searchpath = appenddir(file);
 			dir = str_concat(NULL, *(_path + j));
