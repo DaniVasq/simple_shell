@@ -8,19 +8,22 @@
   *@env: environment var
   * Return: 1.
   */
-int main(int argc, char **argv, char **env)
+int main(int argc, char **argv, char **env __attribute__((unused)))
 {
 	/** pointer used to save data input of the terminal client */
 	char *line;
-	char *argv2[] = {__FILE__, NULL};
+	/*char *argv2[] = {__FILE__, NULL};*/
 	int _isatty;
 	int statusbuffer = 0;
+	int status_pid = 0;
 	char *_ARGS_PATH[] = {"/bin/",
 "/sbin/", "/usr/local/sbin/", "/usr/local/bin/",
 "/usr/sbin/", "/usr/bin/", "/snap/bin/", NULL};
 	/*char **_ARGS_PATH = setpathparams(getpath(env));*/
 	signal(SIGINT, intHandler);
 	_isatty = isatty(0);
+	while(1)
+	{
 	if (argc == 1)
 	{
 		line = malloc(sizeof(char) * SIZEBUFFER + 1);
@@ -34,21 +37,22 @@ int main(int argc, char **argv, char **env)
 		{
 			free(line);
 			/*free(_ARGS_PATH);*/
-			return (0);
+			exit (status_pid);
 		}
 		/*printf("get data line >> %s\n", line);*/
 	}	/** parse the pointer to exec the command*/
-	get_simple_args(argc, argv, line, _ARGS_PATH);
+	status_pid = get_simple_args(argc, argv, line, _ARGS_PATH);
 	/** launch prompt */
 	if (_isatty != 0)
 		prompt();
 	/**fseek(stdin, 0, SEEK_END);*/
 	fflush(stdin);
 	fflush(stdout);
+	}
 	/** call himself, fn recursive */
-	if (_isatty != 0 || statusbuffer != -1)
-		main(1, argv2, env);
-	return (0);
+	/*if (_isatty != 0 || statusbuffer != -1)
+		main(1, argv2, env);*/
+	return (status_pid);
 }
 /**
  * intHandler - signal handler
