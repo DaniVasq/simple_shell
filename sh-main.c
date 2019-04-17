@@ -8,7 +8,7 @@
   *@env: environment var
   * Return: 1.
   */
-int main(int argc, char **argv, char **env __attribute__((unused)))
+int main(int argc, char **argv, char **env)
 {
 	/** pointer used to save data input of the terminal client */
 	char *line;
