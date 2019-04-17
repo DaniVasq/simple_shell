@@ -42,8 +42,7 @@ int get_simple_args(int argc, char **argv, char *args, char **_path)
 	char **options;
 	char *argx;
 	int j = 0;
-	int args_max = 255;
-	int status_pid = 0;
+	int args_max = 255, status_pid = 0;
 	(void)_path;
 
 	if (argc == 1)
@@ -66,7 +65,6 @@ int get_simple_args(int argc, char **argv, char *args, char **_path)
 				j++;
 			}
 			options[j] = NULL;
-			/*if (update_cmd(options, _path))*/
 			if (options[0] != NULL && _strlen(options[0]) > 0)
 				status_pid = pid_launch(options, args, _path);
 			free(args);
@@ -76,7 +74,6 @@ int get_simple_args(int argc, char **argv, char *args, char **_path)
 	else if (argc >= 2)
 	{
 		args_pop(argv);
-		/*update_cmd(argv, _path);*/
 		status_pid = pid_launch(argv, NULL, _path);
 	}
 	return (status_pid);
@@ -123,8 +120,7 @@ int pid_launch(char **_argv, char *args, char **_path)
 			{_error();
 				free(args);
 				free(_argv);
-				exit(-1); }
-		}
+				exit(-1); } }
 		else
 		{free(args);
 			free(_argv);
