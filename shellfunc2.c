@@ -134,7 +134,6 @@ int update_cmd(char **cmd, char **_path)
 	int status = -1;
 	char *temp;
 	char *temp2;
-	struct stat fileStat;
 
 	if (cmd == NULL || _path == NULL)
 		exit(110);
