@@ -17,7 +17,7 @@ void intHandler(int i);
 void prompt(void);
 int listenread(char *);
 void get_simple_args(int, char **, char *, char **);
-void pid_launch(char **);
+void pid_launch(char **, char *, char **);
 void _error(void);
 long int _strlen(char *);
 int args_pop(char **);
