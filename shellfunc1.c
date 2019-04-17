@@ -89,38 +89,65 @@ void _error(void)
 	printf("/%s: No such file or directory\n", __FILE__);
 }
 /**
- * pid_launch - allows shell to be launched
- *
+ * pid_launch - make a fork to create child process who execute the command
+ *@args: arguments
+ *@_path: path
+ *@pid_launch: launches the process
  *@_argv: argument container
  */
-void pid_launch(char **_argv, char *args, char **_path)
+int pid_launch(char **_argv, char *args, char **_path)
 {
 	pid_t pid;
-	char *envp[] = {"", NULL};
-	int status;
-	/** create id process (parent & child) to launch command*/
+	char *envp[] = {"", NULL}, *dir = NULL, *file = NULL, *fullpath = NULL;
+	int status, j = 0, searchpath = 1, accessfile = 0;
+	struct stat fileStat;
+
 	pid = fork();
 	if (pid == 0)
 	{
-		if (execve(_argv[0], _argv, envp) == -1)
+		file =  _argv[0];
+		while (*(_path + j) != NULL && searchpath == 1)
+		{searchpath = appenddir(file);
+			dir = strdup(*(_path + j));
+			fullpath = searchpath == 1 ? _strcat(dir, file) : file;
+			if (stat(fullpath, &fileStat) == 0)
+			{accessfile = 1;
+				searchpath = 0; }
+			j++;
+			free(dir); }
+		if (accessfile)
 		{
-			_error();
-			free(args);
-			free(_path);
-			free(_argv);
-			exit(103);
+			if (execve(fullpath, _argv, envp) == -1)
+			{_error();
+				free(args);
+				free(_argv);
+				exit(-1); }
 		}
+		else
+		{free(args);
+			free(_argv);
+			_error();
+			exit(2); }
 	}
 	else if (pid < 0)
-	{
-		free(args);
+	{free(args);
 		free(_path);
 		free(_argv);
-		exit(102);
-	}
-	/** always wait the pid is kill*/
-	do {
+		exit(102); }
+	else
 		waitpid(pid, &status, 0);
-		free(_path);
-	} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+	return (WIFEXITED(status) & 255);
+}
+int appenddir(char *cmd)
+{
+	int i = 0;
+
+	while (cmd[i] != '\0')
+		i++;
+	if (i > 2)
+	{
+		if (cmd[0] == '.' || cmd[0] == '/')
+			return (0);
+	}
+	return (1);
 }
