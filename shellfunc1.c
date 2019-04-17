@@ -92,8 +92,8 @@ void _error(void)
  * pid_launch - make a fork to create child process who execute the command
  *@args: arguments
  *@_path: path
- *@pid_launch: launches the process
  *@_argv: argument container
+ * Return: exit status
  */
 int pid_launch(char **_argv, char *args, char **_path)
 {
@@ -137,17 +137,4 @@ int pid_launch(char **_argv, char *args, char **_path)
 	else
 		waitpid(pid, &status, 0);
 	return (WIFEXITED(status) & 255);
-}
-int appenddir(char *cmd)
-{
-	int i = 0;
-
-	while (cmd[i] != '\0')
-		i++;
-	if (i > 2)
-	{
-		if (cmd[0] == '.' || cmd[0] == '/')
-			return (0);
-	}
-	return (1);
 }
