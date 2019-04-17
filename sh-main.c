@@ -56,6 +56,7 @@ int main(int argc, char **argv, char **env)
  */
 void intHandler(int i __attribute__((unused)))
 {
+	write(STDOUT_FILENO, "\n", 1);
 	fflush(stdout);
 }
 /**
