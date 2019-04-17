@@ -18,7 +18,7 @@ int main(int argc, char **argv, char **env)
 	char *_ARGS_PATH[] = {"/bin/",
 "/sbin/", "/usr/local/sbin/", "/usr/local/bin/",
 "/usr/sbin/", "/usr/bin/", "/snap/bin/", NULL};
-
+	/*char **_ARGS_PATH = setpathparams(getpath(env));*/
 	signal(SIGINT, intHandler);
 	_isatty = isatty(0);
 	if (argc == 1)
@@ -33,12 +33,11 @@ int main(int argc, char **argv, char **env)
 		if (statusbuffer == -1)
 		{
 			free(line);
+			/*free(_ARGS_PATH);*/
 			return (0);
 		}
 		/*printf("get data line >> %s\n", line);*/
-	}
-
-	/** parse the pointer to exec the command*/
+	}	/** parse the pointer to exec the command*/
 	get_simple_args(argc, argv, line, _ARGS_PATH);
 	/** launch prompt */
 	if (_isatty != 0)

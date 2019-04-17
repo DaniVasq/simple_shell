@@ -67,7 +67,7 @@ void get_simple_args(int argc, char **argv, char *args, char **_path)
 			options[j] = NULL;
 			/*if (update_cmd(options, _path))*/
 			if (options[0] != NULL && _strlen(options[0]) > 0)
-				pid_launch(options);
+				pid_launch(options, args, _path);
 			free(args);
 			free(options);
 		}
@@ -76,7 +76,7 @@ void get_simple_args(int argc, char **argv, char *args, char **_path)
 	{
 		args_pop(argv);
 		/*update_cmd(argv, _path);*/
-		pid_launch(argv);
+		pid_launch(argv, NULL, NULL);
 	}
 }
 
@@ -89,35 +89,52 @@ void _error(void)
 	printf("/%s: No such file or directory\n", __FILE__);
 }
 /**
- * pid_launch - allows shell to be launched
- *
+ * pid_launch - make a fork to create child process who execute the command
+ *@args: arguments
+ *@_path: path
  *@_argv: argument container
+ * Return: exit status
  */
-void pid_launch(char **_argv)
+int pid_launch(char **_argv, char *args, char **_path)
 {
 	pid_t pid;
-	char *envp[] = {"", NULL};
-	int status;
-	/** create id process (parent & child) to launch command*/
+	char *envp[] = {"", NULL}, *dir = NULL, *file = NULL, *fullpath = NULL;
+	int status, j = 0, searchpath = 1, accessfile = 0;
+	struct stat fileStat;
+
 	pid = fork();
 	if (pid == 0)
 	{
-		if (execve(_argv[0], _argv, envp) == -1)
+		file =  _argv[0];
+		while (*(_path + j) != NULL && searchpath == 1)
+		{searchpath = appenddir(file);
+			dir = strdup(*(_path + j));
+			fullpath = searchpath == 1 ? _strcat(dir, file) : file;
+			if (stat(fullpath, &fileStat) == 0)
+			{accessfile = 1;
+				searchpath = 0; }
+			j++;
+			free(dir); }
+		if (accessfile)
 		{
-			_error();
-			exit(103);
+			if (execve(fullpath, _argv, envp) == -1)
+			{_error();
+				free(args);
+				free(_argv);
+				exit(-1); }
 		}
+		else
+		{free(args);
+			free(_argv);
+			_error();
+			exit(2); }
 	}
 	else if (pid < 0)
-	{
-		exit(102);
-	}
-	/** always wait the pid is kill*/
-	do {
+	{free(args);
+		free(_path);
+		free(_argv);
+		exit(102); }
+	else
 		waitpid(pid, &status, 0);
-	} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+	return (WIFEXITED(status) & 255);
 }
-
-
-
-
