@@ -108,8 +108,9 @@ int pid_launch(char **_argv, char *args, char **_path)
 		file =  _argv[0];
 		while (*(_path + j) != NULL && searchpath == 1)
 		{searchpath = appenddir(file);
-			dir = strdup(*(_path + j));
-			fullpath = searchpath == 1 ? _strcat(dir, file) : file;
+			dir = str_concat(NULL, *(_path + j));
+			/*dir = strdup(*(_path + j));*/
+			fullpath = searchpath == 1 ? str_concat(dir, file) : file;
 			if (stat(fullpath, &fileStat) == 0)
 			{accessfile = 1;
 				searchpath = 0; }
