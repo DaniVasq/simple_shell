@@ -37,7 +37,7 @@ int listenread(char *buffer)
  *@_path: path
  * Return: status of execution
  */
-int get_simple_args(int argc, char **argv, char *args, char **_path)
+int get_simple_args(int argc, char **argv, char *args, char **_path, char **ev)
 {
 	char delim[] = " \n";
 	char **options;
@@ -60,13 +60,13 @@ int get_simple_args(int argc, char **argv, char *args, char **_path)
 			}
 			argx = strtok(args, delim);
 			while (argx != NULL)
-			{
-				options[j] = argx;
+			{options[j] = argx;
 				argx = strtok(NULL, delim);
-				j++;
-			}
+				j++; }
 			options[j] = NULL;
-			if (options[0] != NULL && _strlen(options[0]) > 0)
+			if (_strcmp(options[0], "env") == 0 && options[1] == NULL)
+				printenv(ev);
+			else if (options[0] != NULL && _strlen(options[0]) > 0)
 				status_pid = pid_launch(options, args, _path);
 			free(args);
 			free(options);

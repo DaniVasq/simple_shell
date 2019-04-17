@@ -1,6 +1,25 @@
 #include "shell.h"
 #include <signal.h>
 
+int printenv(char **);
+/**
+  * printenv - show vars of enviroment
+  * @env: arguments
+  * Return: 1.
+  */
+int printenv(char **env)
+{
+	int i = 0;
+
+	while (*(env + i) != NULL)
+	{
+		printf("%s\n", *(env + i));
+		i++;
+	}
+	return (0);
+}
+
+
 /**
   * main - Entry to launch program
   * @argc: argument counter
@@ -37,7 +56,7 @@ int main(int argc, char **argv, char **env __attribute__((unused)))
 			exit(status_pid);
 		}
 	}
-	status_pid = get_simple_args(argc, argv, line, _ARGS_PATH);
+	status_pid = get_simple_args(argc, argv, line, _ARGS_PATH, env);
 	if (_isatty != 0)
 		prompt();
 	fflush(stdin);

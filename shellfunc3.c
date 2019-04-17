@@ -1,6 +1,23 @@
 #include "shell.h"
 
 /**
+* printenv - print env
+* @env: pointer contains the list var
+* Return: 0
+*/
+int printenv(char **env)
+{
+	int i = 0;
+
+	while (*(env + i) != NULL)
+	{
+		printf("%s\n", *(env + i));
+		i++;
+	}
+	return (0);
+}
+
+/**
  * appenddir - appends the "." and "/" of the commands in env path
  *@cmd: command
  * Return: 0 or 1
@@ -17,39 +34,4 @@ int appenddir(char *cmd)
 			return (0);
 	}
 	return (1);
-}
-
-/**
- * update_cmd - access to string and updated command
- *@cmd: command
- *@_path: path
- * Return: status (error or no error)
- */
-int update_cmd(char **cmd, char **_path)
-{
-
-	int index = 0;
-	int status = -1;
-	char *temp;
-	char *temp2;
-
-	if (cmd == NULL || _path == NULL)
-		exit(110);
-
-	else if (!cmd[index])
-		exit(111);
-	else
-		while (_path[index] != NULL)
-		{
-			index++;
-			temp2 = _path[index];
-			temp = _strcat(temp2, cmd[0]);
-			if (access(temp, X_OK) == 0)
-			{
-				cmd[0] = temp;
-				status = 1;
-				return (status);
-			}
-		}
-	return (status);
 }

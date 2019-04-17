@@ -19,7 +19,7 @@ char *_strcat(char *dest, char *src);
 void intHandler(int i);
 void prompt(void);
 int listenread(char *);
-int get_simple_args(int, char **, char *, char **);
+int get_simple_args(int, char **, char *, char **, char **);
 int pid_launch(char **, char *, char **);
 void _error(void);
 long int _strlen(char *);
@@ -28,4 +28,5 @@ char *getpath(char **);
 char **setpathparams(char *);
 int update_cmd(char **, char**);
 int appenddir(char *);
+int printenv(char **);
 #endif
